@@ -1,8 +1,8 @@
 # twautoblocker
 Detecta cuentas sospechosas y las elimina del follower list (o las bloquea) 
 
-Napoleon E. Cornejo
-May 2 2021
+*Napoleon E. Cornejo <br>
+May 2 2021*
 
 Este script busca entre los followers las cuentas que parecen sospechosas según algunos citerios:
 - fecha de creacion
