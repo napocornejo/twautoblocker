@@ -46,7 +46,7 @@ def filter_users(ids_listfile, api):
         for user in results:
             block = False
 
-            ## criteria to clock (needs to be updated)
+            ## criteria to block (needs to be updated)
             block = (user.created_at.year > 2020) and suspiciuos_name(user.screen_name)
             block = block or (suspiciuos_name(user.screen_name) and (user.followers_count < 30))
             block = block and (not user.verified)
@@ -63,7 +63,7 @@ def filter_users(ids_listfile, api):
         print('Users checked: ' + str(users_checked) + '. Blocked: ' + str(users_blocked))
         time.sleep(10)
 
-# Press the green button in the gutter to run the script.
+
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser('twautoblocker')
