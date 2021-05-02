@@ -24,9 +24,6 @@ def get_followers(store_file):
     pickle.dump(followers,outfile)
     print('Follower list pickled.')
 
-    for follower in followers:
-        print(follower)
-
 
 def suspiciuos_name(username):
     ## for now, name suspicious if has more than 4 numbers
@@ -48,6 +45,7 @@ def filter_users(ids_listfile, api):
 
             ## criteria to block (needs to be updated)
             block = (user.created_at.year > 2020) and suspiciuos_name(user.screen_name)
+            block = block or (user.created_at.year > 2020) and (user.created_at.month >= 3) and (user.followers_count < 100)
             block = block or (suspiciuos_name(user.screen_name) and (user.followers_count < 30))
             block = block and (not user.verified)
 
@@ -67,15 +65,15 @@ def filter_users(ids_listfile, api):
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser('twautoblocker')
-    parser.add_argument('--credenciales', help="Archivo de credenciales.", default='credenciales.json')
+    parser.add_argument('--credentials', help="Archivo de credenciales.", default='credenciales.json')
     parser.add_argument('--store_file', help="Archivo opcional para almacenar todas los follower ids.", default='followers.pkl')
     args = parser.parse_args()
 
-    if not os.path.exists(args.credenciales):
-        print('No se encuentra el archivo: ' + str(args.credenciales))
+    if not os.path.exists(args.credentials):
+        print('No se encuentra el archivo: ' + str(args.credentials))
         quit()
 
-    credenciales = json.load(open(args.credenciales, 'r'))
+    credenciales = json.load(open(args.credentials, 'r'))
     auth = tw.OAuthHandler(credenciales['tw_apikey'], credenciales['tw_secretkey'])
     auth.set_access_token(credenciales['tw_access_token'], credenciales['tw_access_token_secret'])
     api = tw.API(auth, wait_on_rate_limit=True)
@@ -83,5 +81,7 @@ if __name__ == '__main__':
     store_file = args.store_file
     if not os.path.exists(store_file):
         get_followers(store_file)
+    else:
+        print("Loading users from file.")
 
     filter_users(store_file, api)
